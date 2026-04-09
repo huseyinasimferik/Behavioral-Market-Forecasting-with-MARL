@@ -1,4 +1,4 @@
-# 📈 Behavioral Market Forecasting with Multi-Agent Reinforcement Learning (MARL)
+# 📈 Behavioral Market Forecasting with Multi Agent Reinforcement Learning (MARL)
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
 [![Machine Learning](https://img.shields.io/badge/Focus-Machine%20Learning-green.svg)]()
@@ -18,20 +18,20 @@ The core indicator of this project is the **Volume Ratio**, which filters the no
 
 $$Volume\_Ratio = \frac{Volume_t}{Number\_of\_Trades_t}$$
 
-* **Participant Segmentation:** Activity is categorized using 10-day rolling quantiles ($Q$):
+* **Participant Segmentation:** Activity is categorized using 10 day rolling quantiles ($Q$):
     * **Whales:** $Q_{80}$ (High), $Q_{70}$ (Medium), $Q_{60}$ (Low).
     * **Retail:** $Q_{20}$ (High), $Q_{30}$ (Medium), $Q_{40}$ (Low).
 * **Manipulation Score:** A heuristic score derived from Whale-Retail **Divergence**, **Dominance**, and **Hold Gap** to quantify "unnatural" market movements.
 
 ### 2. The MARL Engine
 A custom reinforcement learning environment was built where independent agents simulate market dynamics:
-* **Whale Agent:** Models institutional trend-setting and high-volume impact.
-* **Retail Agent:** Models sentiment-driven and often emotional trading patterns.
-* **Adaptive Exploration:** To prevent local optima, an $\epsilon$-decay strategy was implemented that increases exploration if learning progress stalls.
+* **Whale Agent:** Models institutional trend setting and high volume impact.
+* **Retail Agent:** Models sentiment driven and often emotional trading patterns.
+* **Adaptive Exploration:** To prevent local optima, an $\epsilon$ decay strategy was implemented that increases exploration if learning progress stalls.
 
 ### 3. Predictive Model (XGBoost)
 The final decision layer is an **XGBoost Classifier** that aggregates MARL probability distributions and technical indicators.
-* **Validation:** 5-fold TimeSeries Split was used to ensure zero look-ahead bias and robust generalization across different market regimes.
+* **Validation:** 5 fold TimeSeries Split was used to ensure zero look ahead bias and robust generalization across different market regimes.
 
 ---
 
@@ -46,7 +46,7 @@ The model was tested on a 10% unseen hold-out dataset representing a highly vola
 | **Very High Conf. Accuracy (Increase)** | **81.48%** |
 | **Risk Avoidance (Decrease Recall)** | **74.00%** |
 
-###Trading Simulation (1-Year Backtest)
+###Trading Simulation (1 Year Backtest)
 The simulation started with **$10,000** initial capital.
 
 * **High Confidence Strategy:** Reached **$62,926.89** (**+529.27% ROI**).
