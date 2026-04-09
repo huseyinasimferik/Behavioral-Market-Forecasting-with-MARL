@@ -4,14 +4,14 @@
 [![Machine Learning](https://img.shields.io/badge/Focus-Machine%20Learning-green.svg)]()
 [![FinTech](https://img.shields.io/badge/Sector-FinTech-orange.svg)]()
 
-> **⚠️ Technical Note:** To protect intellectual property and personal data, the core source code and the original internship report have been kept proprietary. This repository is a technical portfolio showcasing the architecture and simulation results.
+> **Technical Note:** To protect intellectual property and personal data, the core source code and the original internship report have been kept proprietary. This repository is a technical portfolio showcasing the architecture and simulation results.
 
 ---
 
-## 🔍 Executive Summary
+##Executive Summary
 This project introduces a **behavioral finance framework** designed to predict the price direction of Solana (SOL) by modeling the interactions between different market participants. Unlike traditional models that rely on pure price patterns, this system identifies **Whale (Institutional)** and **Retail (Individual)** behaviors to detect manipulation and trend reversals.
 
-## 🧠 System Architecture
+##System Architecture
 
 ### 1. Behavioral ETL & Feature Engineering
 The core indicator of this project is the **Volume Ratio**, which filters the noise to identify the primary actors:
@@ -35,7 +35,7 @@ The final decision layer is an **XGBoost Classifier** that aggregates MARL proba
 
 ---
 
-## 📊 Results & Performance
+##Results & Performance
 
 The model was tested on a 10% unseen hold-out dataset representing a highly volatile market regime.
 
@@ -46,7 +46,7 @@ The model was tested on a 10% unseen hold-out dataset representing a highly vola
 | **Very High Conf. Accuracy (Increase)** | **81.48%** |
 | **Risk Avoidance (Decrease Recall)** | **74.00%** |
 
-### 🚀 Trading Simulation (1-Year Backtest)
+###Trading Simulation (1-Year Backtest)
 The simulation started with **$10,000** initial capital.
 
 * **High Confidence Strategy:** Reached **$62,926.89** (**+529.27% ROI**).
