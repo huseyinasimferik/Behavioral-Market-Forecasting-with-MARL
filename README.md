@@ -1,4 +1,4 @@
-# 📈 Behavioral Market Forecasting with Multi Agent Reinforcement Learning (MARL)
+#Behavioral Market Forecasting with Multi Agent Reinforcement Learning (MARL)
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
 [![Machine Learning](https://img.shields.io/badge/Focus-Machine%20Learning-green.svg)]()
@@ -54,7 +54,7 @@ The simulation started with **$10,000** initial capital.
 
 ---
 
-## 🖼 Visual Evidence
+##Visual Evidence
 Agent Probabilities Heatmap
 ### Agent Probabilities Heatmap:
 ![Agent Probabilities Heatmap](./agent_probabilities_heatmap.png)
