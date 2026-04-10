@@ -100,6 +100,9 @@ pandas_ta
 matplotlib
 seaborn
 requests
+```
 
-##Contact
-For a detailed technical walkthrough or to discuss the findings, feel free to reach out via **[LinkedIn](https://www.linkedin.com/in/huseyinasimferik)**.
+---
+
+## Contact
+For a detailed technical walkthrough or to discuss the findings, feel free to reach out via **[LinkedIn](https://www.linkedin.com/in/huseyinasimferik)** or **huseyinasimferik@gmail.com**.
