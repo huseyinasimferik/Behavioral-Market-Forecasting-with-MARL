@@ -1,99 +1,96 @@
-# 📈 Behavioral Market Forecasting with Multi-Agent Reinforcement Learning (MARL)
+# Behavioral Market Forecasting with Multi-Agent Reinforcement Learning (MARL)
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
 [![Machine Learning](https://img.shields.io/badge/Focus-Machine%20Learning-green.svg)]()
 [![FinTech](https://img.shields.io/badge/Sector-FinTech-orange.svg)]()
 
-> **⚠️ Technical Note:** To protect intellectual property and personal data, the core source code and the original internship report have been kept proprietary. This repository serves as a technical showcase of the methodology, behavioral heuristics, and simulation results.
+> **Technical Note:** To protect intellectual property and personal data, I have kept the core source code and the original internship report proprietary. This repository serves as my technical portfolio, showcasing the architecture, behavioral heuristics, and simulation results I developed during my internship at Sade Software and Consulting.
 
 ---
 
-## 🔍 Executive Summary
-[cite_start]This project introduces a **behavioral finance framework** designed to predict the price direction of Solana (SOL) by modeling the complex interactions between institutional (Whale) and individual (Retail) market participants[cite: 440, 443]. [cite_start]By moving beyond traditional price-action models, the system identifies market manipulation and trend reversals through high-dimensional behavioral features and Reinforcement Learning[cite: 462, 498].
+## Executive Summary
+In this project, I developed a **behavioral finance framework** to predict the price direction of Solana (SOL). My approach focuses on modeling the interactions between different market participants—specifically "Whales" (Institutional) and "Retail" (Individual) traders. Unlike traditional models that rely only on price patterns, I designed this system to detect market manipulation and trend reversals by identifying the volumetric footprints of these actors. As a student at METU, this project allowed me to combine academic rigor with real-world financial data science.
 
-## 🧠 System Architecture
+## System Architecture
 
 ### 1. Behavioral Feature Engineering & ETL
-The foundation of the model lies in its ability to segment market actors based on their footprint in the order book. [cite_start]The primary metric is the **Volume Ratio**, representing the average size of a single trade [cite: 443-447]:
+I built the foundation of my model on the **Volume Ratio** metric. I used this to filter market noise and identify who is leading the price action at any given time. This ratio represents the average size of a single trade:
 
 $$Volume\_Ratio = \frac{\text{Volume}_t}{\text{Number of Trades}_t}$$
 
-* [cite_start]**Participant Segmentation:** Activity is categorized using dynamic 10-day rolling quantiles ($Q$)[cite: 449]:
-    * [cite_start]**Whales (Institutional):** Identified by higher volume-per-trade thresholds ($Q_{80}, Q_{70}, Q_{60}$)[cite: 450].
-    * [cite_start]**Retail (Individual):** Identified by lower volume-per-trade thresholds ($Q_{20}, Q_{30}, Q_{40}$)[cite: 451].
-* [cite_start]**Behavioral Indicators:** The ETL process generates features for **Accumulation** (buying pressure) and **Distribution** (selling pressure) for each segment, further refined to identify emotional extremes like **FOMO** and **Panic** [cite: 453-457].
+* **My Segmentation Logic:** I categorized market activity using dynamic 10-day rolling quantiles ($Q$). This ensures that my definition of a "Whale" adapts to changing market liquidity.
+    * **Whales:** Identified by the highest volume-per-trade thresholds ($Q_{80}, Q_{70}, Q_{60}$).
+    * **Retail:** Identified by lower thresholds ($Q_{20}, Q_{30}, Q_{40}$), representing smaller, more frequent trades.
+* **Sentiment Modeling:** I created features to track **Accumulation** (buying) and **Distribution** (selling) for each group. I also implemented indicators to detect emotional extremes, which I labeled as **FOMO** and **Panic**.
 
 ### 2. Manipulation Analysis Heuristics
-[cite_start]A custom heuristic module quantifies "unnatural" market movements by calculating a **Composite Manipulation Score** ($S_{composite}$) [cite: 499-501]:
+I developed a unique heuristic module to quantify "unnatural" market movements. I formulated a **Composite Manipulation Score** ($S_{composite}$) to identify potential market traps:
 
 $$S_{composite} = \alpha \cdot D + \beta \cdot L + \gamma \cdot H$$
 
-Where:
-* [cite_start]**Divergence ($D$):** Measures the net position disagreement between Whales and Retail traders[cite: 502, 504].
-* [cite_start]**Dominance ($L$):** A logarithmic scale measuring the relative strength imbalance between groups [cite: 508-511].
-* [cite_start]**Hold Gap ($H$):** Captures the total exposure difference in market participation [cite: 512-513].
-* [cite_start]**Optimization:** Weighted at $\alpha=0.5, \beta=0.35, \gamma=0.15$ to prioritize distribution-phase traps [cite: 515-519].
+* **Divergence ($D$):** I measure the disagreement between Whale and Retail positions.
+* **Dominance ($L$):** I use a logarithmic scale to measure the relative strength of Whales over Retail.
+* **Hold Gap ($H$):** I capture the total exposure difference between the two groups.
+* **Optimization:** I weighted these as $\alpha=0.5, \beta=0.35, \gamma=0.15$. By giving the most weight to Divergence, I improved the model's ability to spot distribution phases before a price drop.
 
 ### 3. The MARL Engine (Multi-Agent Reinforcement Learning)
-[cite_start]The market environment is simulated using two independent Q-Learning agents [cite: 463-465, 468]:
-* [cite_start]**Whale Agent:** Optimized to learn trend-setting strategies based on institutional capital flows[cite: 466, 480].
-* [cite_start]**Retail Agent:** Optimized to model momentum-driven and sentiment-heavy public trading patterns[cite: 467].
-* [cite_start]**Reward Mechanism:** Agents are governed by a **Relation Module**, where rewards are scaled based on an **Alignment Score**, encouraging the system to learn the strength of a trend through participant agreement [cite: 477, 481-483].
-* [cite_start]**Adaptive Exploration:** An advanced performance-based $\epsilon$-decay strategy is implemented to ensure the agents escape local optima during volatile regimes without compromising learned stability [cite: 486, 488-494].
+The core of my system is a Multi-Agent environment where I trained two independent Q-Learning agents:
+* **Whale Agent:** I optimized this agent to learn institutional strategies and trend-setting behaviors.
+* **Retail Agent:** I designed this to model sentiment-driven and momentum-heavy patterns.
+* **Alignment Reward:** I implemented a **Relation Module** where agents receive higher rewards if their actions align. This helps the system confirm the strength of a trend through participant agreement.
+* **Adaptive Exploration:** I created an advanced $\epsilon$-decay strategy. If the model stops making learning progress, it automatically increases exploration to find better strategies in volatile regimes.
 
-### 4. Final Prediction & Validation (XGBoost)
-[cite_start]The final classification layer uses an **XGBoost Classifier** that aggregates MARL probability distributions with technical indicators [cite: 521, 528-531].
-* [cite_start]**Validation:** 5-fold **TimeSeries Split** cross-validation was used to ensure zero look-ahead bias [cite: 532-533].
+### 4. Final Predictive Model (XGBoost)
+I used an **XGBoost Classifier** as the final decision layer. It aggregates the probabilities from my MARL agents with technical indicators. To ensure my results were honest and robust, I used a 5-fold **TimeSeries Split**, which prevents the model from "seeing" future data during training.
 
 ---
 
-## 📊 Results & Performance
+## Results & Performance
 
-| Metric | Result | Technical Insight |
+| Metric | Result | My Technical Insight |
 | :--- | :--- | :--- |
-| **Final Test Accuracy** | **61.26%** | [cite_start]High predictive edge in volatile crypto markets [cite: 572-573]. |
-| **ROC AUC Score** | **0.6728** | [cite_start]Significant discriminative capability[cite: 572, 591]. |
-| **High Conf. Accuracy (Increase)** | **81.48%** | [cite_start]Achieved when increase probability $P > 0.7$[cite: 682, 694]. |
-| **Risk Avoidance (Decrease Recall)** | **74.00%** | [cite_start]High sensitivity to downward trends for capital protection[cite: 622, 625]. |
+| **Final Test Accuracy** | **61.26%** | This is a significant "predictive edge" in a market as volatile as crypto. |
+| **ROC AUC Score** | **0.6728** | Confirms the model's strong ability to distinguish between up and down moves. |
+| **High Conf. Accuracy** | **81.48%** | Success rate when the model is very confident ($P > 0.7$). |
+| **Risk Avoidance (Recall)** | **74.00%** | The model is exceptionally good at identifying and avoiding downward trends. |
 
-### 🚀 Trading Simulation (1-Year Backtest)
-Initial Capital: **$10,000** | [cite_start]Period: **Feb 2025 - Feb 2026** [cite: 718, 754-755].
-
-* [cite_start]**High Confidence Strategy:** Reached **$62,926.89** (**+529.27% ROI**) [cite: 720, 738-739].
-* [cite_start]**Buy & Hold Benchmark:** Ended at **$4,139.77** (**-58.60% Loss**) [cite: 725, 752-753].
+### Trading Simulation (1-Year Backtest)
+I started the simulation with **$10,000**.
+* **My High Confidence Strategy:** Reached **$62,926.89** (**+529.27% ROI**).
+* **Buy & Hold Benchmark:** During the same period, simply holding SOL resulted in a **$4,139.77** final balance (**-58.60% Loss**).
 
 ---
 
-## 🖼 Visual Evidence & Technical Analysis
+## Visual Evidence & Detailed Analysis
 
-### 📡 Agent Probabilities Heatmap
+### Agent Probabilities Heatmap
 ![Agent Probabilities Heatmap](./assets/agent_probabilities_heatmap.png)
-*Technical Insight: This heatmap visualizes the action probabilities ($P$) generated by the MARL agents. It showcases how the Whale agent's high-confidence "Hold" or "Buy" signals often precede significant price shifts, while Retail volatility highlights market indecision.*
+**My Analysis:** This heatmap is a window into the "minds" of my MARL agents. You can see how the Whale agent's high-confidence signals often act as a leading indicator. When the heatmap shows Whale accumulation while Retail remains indecisive, it typically precedes a healthy trend.
 
-### 🛠 Feature Importance
+### Feature Importance
 ![Feature Importance](./assets/feature_importance.png)
-[cite_start]*Technical Insight: MARL-generated behavioral probabilities (Retail Sell/Buy Prob) dominate the model's decisions, ranking significantly higher than traditional indicators like Bollinger Bands or RSI [cite: 575-581, 647-655].*
+**My Analysis:** I found it fascinating that the behavioral probabilities I generated (Retail Sell/Buy Prob) completely dominate the model's decision-making. They rank much higher than standard indicators like RSI or Bollinger Bands. This proves my thesis: in crypto, understanding *who* is trading is more important than just looking at the price.
 
-### 📉 Confusion Matrix
+### Confusion Matrix
 ![Confusion Matrix](./assets/confusion_matrix.png)
-*Technical Insight: The matrix demonstrates the model's 74% recall for downward movements, proving its efficacy as a risk management tool in bear markets.*
+**My Analysis:** This is the most important chart for risk management. My model successfully caught 74% of all downward movements. For a trader, this means the system is not just a profit generator, but a powerful shield that tells you when to move to cash.
 
-### 📅 Performance Distribution
+### Performance Distribution
 ![Monthly and Annual Performance Analysis](./assets/monthly_annual_performance_analysis.png)
-[cite_start]*Technical Insight: Monthly accuracy analysis reveals the model's adaptability across different market regimes, peaking at 80% accuracy during high-trend months [cite: 696-698].*
+**My Analysis:** I analyzed the model's success month-by-month to see how it handles different market "regimes." While accuracy fluctuates, it peaked at 80%, showing that the system excels when there is a clear behavioral trend to follow.
 
-### 💰 Capital Growth Comparison
+### Capital Growth Comparison
 ![Capital Growth](./assets/capital_growth.png)
-[cite_start]*Technical Insight: A 365-day equity curve comparison showing the "High Confidence" strategy vastly outperforming the asset's raw performance during a major market decline [cite: 717-725, 756].*
+**My Analysis:** This equity curve is the ultimate proof of my work. While the market (orange line) crashed by nearly 60%, my High Confidence strategy (green line) grew the capital over 6 times. It shows that behavioral modeling can find "Alpha" even in the middle of a bear market.
 
-### 📊 Detailed Simulation Metrics
+### Detailed Simulation Metrics
 ![Trading Simulation Results](./assets/trading_simulation_results.png)
-[cite_start]*Technical Insight: Comprehensive breakdown of trade counts, profit/loss days, and net ROI after adjusting for potential transaction costs [cite: 726-728, 730-756].*
+**My Analysis:** Here I break down the trade counts and profit/loss days. Even after accounting for potential Binance fees and slippage, the strategy remains highly profitable. It validates that my model produces actionable and sustainable trading signals.
 
 ---
 
-## ⚙️ Requirements
-To replicate the environment or run the analytical scripts:
+## Requirements
+To set up the environment I used for data processing and modeling:
 ```text
 pandas
 numpy
@@ -103,7 +100,6 @@ pandas_ta
 matplotlib
 seaborn
 requests
----
 
 ##Contact
 For a detailed technical walkthrough or to discuss the findings, feel free to reach out via **[LinkedIn](https://www.linkedin.com/in/huseyinasimferik)**.
